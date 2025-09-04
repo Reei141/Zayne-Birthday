@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playlist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #111;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      width: 350px;
+      background: #222;
+      padding: 20px;
+      border-radius: 20px;
+      text-align: center;
+    }
+    .cover img {
+      width: 100%;
+      border-radius: 15px;
+    }
+    .song-info {
+      margin: 15px 0;
+    }
+    .progress {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    .bar {
+      flex: 1;
+      height: 6px;
+      background: #444;
+      margin: 0 10px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .fill {
+      width: 0%;
+      height: 100%;
+      background: #ff4081;
+    }
+    .controls button {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      margin: 0 10px;
+      cursor: pointer;
+    }
+    .heart {
+      margin-top: 10px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="text">
+      <h1>Playlist</h1>
+      <p>Songs that remind me of you</p>
+    </div>
+
+    <div class="cover">
+      <img src="love.jpeg" alt="Cover">
+    </div>
+
+    <div class="player">
+      <audio id="player" src="hindi.mp3"></audio>
+      <div class="song-info">
+        <h2 id="title">About You</h2>
+        <p id="artist">The 1975</p>
+      </div>
+
+      <div class="progress">
+        <span id="current">0:00</span>
+        <div class="bar">
+          <div class="fill"></div>
+        </div>
+        <span id="duration">0:00</span>
+      </div>
+
+      <div class="controls">
+        <button id="prev">⏮</button>
+        <button id="play">▶️</button>
+        <button id="next">⏭</button>
+      </div>
+
+      <div class="heart">♡</div>
+    </div>
+  </div>
+
+  <script>
+    const audio = document.getElementById("player");
+    const playBtn = document.getElementById("play");
+    const progressFill = document.querySelector(".fill");
+    const currentTimeEl = document.getElementById("current");
+    const durationEl = document.getElementById("duration");
+
+    function formatTime(sec) {
+      let m = Math.floor(sec / 60);
+      let s = Math.floor(sec % 60).toString().padStart(2, "0");
+      return `${m}:${s}`;
+    }
+
+    audio.addEventListener("loadedmetadata", () => {
+      durationEl.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      progressFill.style.width = (audio.currentTime / audio.duration) * 100 + "%";
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+    });
+
+    playBtn.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+        playBtn.textContent = "⏸";
+      } else {
+        audio.pause();
+        playBtn.textContent = "▶️";
+      }
+    });
+  </script>
+</body>
+</html>

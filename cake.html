@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>For The Love Of My Life</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .fade-text {
+      position: absolute;
+      top: 40%;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 2rem;
+      opacity: 0;
+      animation: fadeInText 3s ease-in-out forwards;
+      animation-delay: 1s;
+      z-index: 1;
+    }
+
+    @keyframes fadeInText {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .cake-container {
+      display: none;
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      margin-top: 100px;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .cake-container:hover {
+      transform: scale(1.1);
+    }
+
+    .cake-container:active {
+      transform: scale(1.1);
+    }
+
+    .cake {
+      position: relative;
+      width: 120px;
+      height: 100px;
+      margin: 0 auto;
+      transform: rotateX(10deg);
+      transform-style: preserve-3d;
+    }
+
+    .layer {
+      position: absolute;
+      width: 100%;
+      height: 30px;
+      border-radius: 6px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .layer-bottom {
+      bottom: 0;
+      background: linear-gradient(to bottom, #fff3e0, #e8d8c3);
+    }
+
+    .layer-middle {
+      bottom: 30px;
+      background: linear-gradient(to bottom, #ffe0b2, #eacb99);
+    }
+
+    .layer-top {
+      bottom: 60px;
+      background: linear-gradient(to bottom, #fff8e1, #e9e0c6);
+    }
+
+    .candle {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 30px;
+      background: #cfd8dc;
+      border-radius: 2px;
+    }
+
+    .flame {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 15px;
+      background: gold;
+      border-radius: 50%;
+      animation: flicker 0.2s infinite;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 1; transform: translateX(-50%) scale(1); }
+      50% { opacity: 0.8; transform: translateX(-50%) scale(1.1); }
+      100% { opacity: 1; transform: translateX(-50%) scale(1); }
+    }
+
+    .birthday-text,
+    .photo {
+      display: none;
+      position: relative;
+      z-index: 2;
+      margin-top: 20px;
+      text-align: center;
+      animation: fadeIn 1s forwards;
+    }
+
+    .birthday-text {
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .photo img {
+      max-width: 300px;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(255,255,255,0.2);
+    }
+
+    .caption {
+      margin-top: 10px;
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    p {
+      color: #aaa;
+      margin-top: 10px;
+    }
+
+    @media (hover: none) {
+      .cake-container:active {
+        transform: scale(1.1);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="c"></canvas>
+
+  <div class="fade-text" id="introText">To the love of my life.</div>
+
+  <div class="cake-container" id="cakeContainer" onclick="toggleCandle()">
+    <div class="cake">
+      <div class="candle">
+        <div class="flame" id="flame"></div>
+      </div>
+      <div class="layer layer-top"></div>
+      <div class="layer layer-middle"></div>
+      <div class="layer layer-bottom"></div>
+    </div>
+        <p>Click the cake! 🎂</p>
+    </div>
+
+  <div id="birthdayText" class="birthday-text">
+    Happy Birthday My Husband 🎉
+  </div>
+
+  <div class="photo" id="giftPhoto">
+    <div class="caption">This is a present for you&lt;3</div>
+    <div class="caption">My Love. 
+      Your winter is my forever home.
+      <p></p>
+    <a href="index.html">Click This To See What I Made.</a>
+    </div>
+
+  </div>
+
+  <script>
+    const flame = document.getElementById('flame');
+    const text = document.getElementById('birthdayText');
+    const photo = document.getElementById('giftPhoto');
+    const cakeContainer = document.getElementById('cakeContainer');
+    const introText = document.getElementById('introText');
+
+    function toggleCandle() {
+      const isOff = flame.style.display === 'none';
+      flame.style.display = isOff ? 'block' : 'none';
+      text.style.display = isOff ? 'block' : 'none';
+      photo.style.display = isOff ? 'block' : 'none';
+    }
+
+    flame.style.display = 'none';
+
+    const canvas = document.getElementById("c");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    function createParticles(x, y) {
+      for (let i = 0; i < 100; i++) {
+        particles.push({
+          x: x,
+          y: y,
+          dx: (Math.random() - 0.5) * 4,
+          dy: (Math.random() - 0.5) * 4,
+          size: Math.random() * 2 + 1,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+          life: 100
+        });
+      }
+    }
+
+    function updateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.dx;
+        p.y += p.dy;
+        p.life -= 1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+    }
+
+    function animate() {
+      updateParticles();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    function launchFirework() {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height / 2;
+      createParticles(x, y);
+    }
+
+    let fireworkInterval = setInterval(launchFirework, 600);
+
+    setTimeout(() => {
+      clearInterval(fireworkInterval);
+      introText.style.display = 'none';
+      setTimeout(() => {
+        cakeContainer.style.display = 'block';
+      }, 500);
+    }, 4000);
+
+    
+  </script>
+
+
+</body>
+</html>
+
