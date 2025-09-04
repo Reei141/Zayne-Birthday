@@ -27,7 +27,7 @@ cd Zayne-Birthday
 ```
 
 ### Open in browser  
-Simply open `index.html` with your preferred browser to view the site.  
+Simply open `cake.html` with your preferred browser to view the site.  
 
 ---
 
